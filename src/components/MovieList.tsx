@@ -14,7 +14,7 @@ type MovieListProps = {
   onUpdateRating: (id: number, rating: number) => void;
   filter: "all" | "watched" | "unwatched";
 };
-
+//lista tyvh filmów
 const movies: Movie[] = [
   {
     id: 1,
@@ -53,7 +53,7 @@ const MovieList = (props: MovieListProps) => {
   if (filteredMovies.length === 0) {
     return <p className="empty-message">Brak filmów do wyświetlenia</p>;
   }
-
+  //wywołanie
   return (
     <div className="movie-list">
       {filteredMovies.map((movie) => (

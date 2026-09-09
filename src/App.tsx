@@ -8,7 +8,9 @@ const App = () => {
   const [watchedStatus, setWatchedStatus] = useState<Record<number, boolean>>(
     {},
   );
+  //oceny
   const [ratings, setRatings] = useState<Record<number, number>>({});
+  //no filter
   const [filter, setFilter] = useState<FilterType>("all");
 
   const updateWatchedStatus = (id: number, isWatched: boolean) => {
@@ -24,7 +26,7 @@ const App = () => {
       [id]: rating,
     }));
   };
-
+  //usuwanie ogladanycg
   const clearAllWatched = () => {
     setWatchedStatus({});
     setRatings({});
@@ -36,7 +38,7 @@ const App = () => {
   const totalMovies = 4;
   const isListEmpty =
     Object.keys(watchedStatus).length === 0 && filter !== "all";
-
+  //to co sie wyswietla
   return (
     <div className="app-container">
       <h1>Moja lista filmów</h1>

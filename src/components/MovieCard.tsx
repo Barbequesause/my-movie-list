@@ -11,12 +11,12 @@ type MovieCardProps = {
   onUpdateWatched: (id: number, isWatched: boolean) => void;
   onUpdateRating: (id: number, rating: number) => void;
 };
-
+//karty filmów
 const MovieCard = (props: MovieCardProps) => {
   const toggleWatched = () => {
     props.onUpdateWatched(props.id, !props.isWatched);
   };
-
+  //na ocene
   const handleRatingClick = (selectedRating: number) => {
     props.onUpdateRating(props.id, selectedRating);
   };
