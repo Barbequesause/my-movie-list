@@ -1,0 +1,40 @@
+.movie-card {
+  // ... (pozostałe style bez zmian)
+
+  .rating-section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 18px;
+
+    .rating-label {
+      color: #829ab1;
+      font-size: 16px;
+    }
+
+    .rating-avocados {
+      display: flex;
+      gap: 6px;
+    }
+
+    .avocado-icon {
+      width: 32px;
+      height: 32px;
+      cursor: pointer;
+      opacity: 0.3;
+      transition:
+        opacity 0.2s ease,
+        transform 0.2s ease;
+
+      &:hover {
+        opacity: 0.8;
+        transform: scale(1.1);
+      }
+
+      &.active {
+        opacity: 1;
+      }
+    }
+  }
+}
