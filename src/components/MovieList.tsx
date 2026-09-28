@@ -1,10 +1,11 @@
-import MovieCard from "./MovieCard";
+type FilterType = "all" | "watched" | "unwatched";
 
 type Movie = {
   id: number;
   title: string;
   year: number;
-  genre: string;
+  genre: string[];
+  watched: boolean;
 };
 
 type MovieListProps = {
@@ -12,63 +13,95 @@ type MovieListProps = {
   ratings: Record<number, number>;
   onUpdateWatched: (id: number, isWatched: boolean) => void;
   onUpdateRating: (id: number, rating: number) => void;
-  filter: "all" | "watched" | "unwatched";
+  filter: FilterType;
+  movies: Movie[];
 };
-//lista tyvh filmów
-const movies: Movie[] = [
-  {
-    id: 1,
-    title: "Interstellar",
-    year: 2014,
-    genre: "Sci-Fi",
-  },
-  {
-    id: 2,
-    title: "Inception",
-    year: 2010,
-    genre: "Sci-Fi",
-  },
-  {
-    id: 3,
-    title: "Daredevil",
-    year: 2003,
-    genre: "Action",
-  },
-  {
-    id: 4,
-    title: "Punisher",
-    year: 2004,
-    genre: "Action",
-  },
-];
 
-const MovieList = (props: MovieListProps) => {
-  const filteredMovies = movies.filter((movie) => {
-    if (props.filter === "all") return true;
-    if (props.filter === "watched") return props.watchedStatus[movie.id];
-    if (props.filter === "unwatched") return !props.watchedStatus[movie.id];
-    return true;
-  });
+const MovieList = ({
+  watchedStatus,
+  ratings,
+  onUpdateWatched,
+  onUpdateRating,
+  filter,
+  movies,
+}: MovieListProps) => {
+  const shouldShowMovie = (movie: Movie) => {
+    const isWatched = watchedStatus[movie.id] || false;
+    if (filter === "all") return true;
+    if (filter === "watched") return isWatched;
+    if (filter === "unwatched") return !isWatched;
+    return false;
+  };
 
-  if (filteredMovies.length === 0) {
-    return <p className="empty-message">Brak filmów do wyświetlenia</p>;
-  }
-  //wywołanie
+  // to renderuje awokado
+  const renderAvocadoRating = (movieId: number) => {
+    const rating = ratings[movieId] || 0;
+    const avocadoIcons = [];
+
+    for (let i = 0; i < 5; i++) {
+      avocadoIcons.push(
+        <span
+          key={i}
+          style={{
+            fontSize: "24px",
+            cursor: "pointer",
+          }}
+          onClick={() => onUpdateRating(movieId, i + 1)}
+        >
+          {i < rating ? "🥑" : "⚪"}
+        </span>,
+      );
+    }
+
+    return (
+      <>
+        {avocadoIcons}
+        <span> {rating}/5</span>
+      </>
+    );
+  };
   return (
     <div className="movie-list">
-      {filteredMovies.map((movie) => (
-        <MovieCard
-          key={movie.id}
-          id={movie.id}
-          title={movie.title}
-          year={movie.year}
-          genre={movie.genre}
-          isWatched={props.watchedStatus[movie.id] || false}
-          rating={props.ratings[movie.id] || 0}
-          onUpdateWatched={props.onUpdateWatched}
-          onUpdateRating={props.onUpdateRating}
-        />
-      ))}
+      <ul>
+        {movies.map((movie) => {
+          if (!shouldShowMovie(movie)) return null;
+
+          return (
+            <li key={movie.id}>
+              <div>
+                <strong>{movie.title}</strong> ({movie.year})
+              </div>
+              <div>
+                <strong>Gatunek:</strong> {movie.genre.join(", ")}
+              </div>
+              <div>
+                <strong>Status:</strong>{" "}
+                {watchedStatus[movie.id] ? "✅ Obejrzany" : "❌ Niezobaczony"}
+              </div>
+              <div>
+                <label>
+                  Ocena:
+                  <div className="avocado-rating">
+                    {renderAvocadoRating(movie.id)}
+                  </div>
+                </label>
+              </div>
+              <div>
+                <label>
+                  Zmień status:
+                  <input
+                    type="checkbox"
+                    checked={watchedStatus[movie.id] || false}
+                    onChange={(e) =>
+                      onUpdateWatched(movie.id, e.target.checked)
+                    }
+                  />
+                </label>
+              </div>
+            </li>
+          );
+        })}
+      </ul>
     </div>
   );
 };
